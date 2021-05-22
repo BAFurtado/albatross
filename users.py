@@ -9,7 +9,7 @@ class User:
         self.history = list()
         self.entertainment = 0
         self.model = model
-        self.intrinsic_value = self.model.param['possible_w_functions']
+        self.intrinsic_value = self.model.param['possible_preferences_functions']
 
     def go_to_page(self):
         pass
