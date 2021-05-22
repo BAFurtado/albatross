@@ -4,6 +4,7 @@ class Advertiser:
     """ Optimize gains from investing in platforms.
         Invest in platforms and collects gains
     """
+    # TODO. Use the likes of the page to value
     def __init__(self, budget):
         self.budget = budget
 

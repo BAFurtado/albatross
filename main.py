@@ -2,8 +2,12 @@ import parameters as params
 import networkx as nx
 import numpy as np
 
+import analysis
+
+
 from users import User
 from platforms import Platform
+from advertisers import Advertiser
 
 
 class Model:
@@ -34,15 +38,22 @@ class Model:
         # For each agent, agents may pass or act
         # Decide on pages to visit
         # Visit pages
-            # Random
-            # Depends on their network
-            # Have visited in the past
+        # Random
+        # Depends on their network
+        # Have visited in the past
         # Gets reward
 
         # PLATFORMS
+        # Collect numbers pass on to advertisers
 
+        # ADVERTISERS
+        # Get results.
+        # Decide on maintenance or new pages
         pass
     # Outputs
+    # Which pattern are you going to use to "validate".
+    # TODO: find pattern to replicate
+    # Observe evolution of
 
 
 def to_dict_from_module():
@@ -51,4 +62,5 @@ def to_dict_from_module():
 
 if __name__ == '__main__':
     prs = to_dict_from_module()
+    # TODO include scenarios.
     m1 = Model(prs)

@@ -10,6 +10,8 @@ class Page:
             # return a sample (or samples) from the “standard normal” distribution.
             self.preferences = np.random.randn() * np.random.choice([1, -1])
         self.cost = abs(self.preferences) / self.model.param['PAGE_COST_DENOMINATOR']
+        self.likes = 0
+
 
 class Platform:
     """ Optimize engagement: number of visitors x time spent
