@@ -1,3 +1,4 @@
+import numpy as np
 
 
 class User:
@@ -5,7 +6,8 @@ class User:
 
     def __init__(self, model):
         self.model = model
-        self.intrinsic_value = None
+        self.intrinsic_value = self.model.param['possible_w_functions'](.5)
+        print(np.random.choice(self.intrinsic_value))
 
     def go_to_page(self):
         pass
