@@ -16,6 +16,7 @@ class Model:
         self.param = param
         self.agents = list()
         self.platforms = list()
+        self.advertisers = list()
         # Create agents
 
         for i in range(param['N_AGENTS']):
@@ -25,6 +26,9 @@ class Model:
             p = Platform(self)
             p.create_page()
             self.platforms.append(p)
+
+        for k in range(params['N_ADVERTISERS']):
+            self.advertisers.append(Advertiser(self))
 
         # Random network
         for agent in self.agents:
