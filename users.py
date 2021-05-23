@@ -15,7 +15,7 @@ class User:
         self.stay_durations  = list()
 
     def go_to_pages(self):
-        if stay_durations[-1] = 0 or len(stay_durations) == 0:
+        if stay_durations[-1] == 0 or len(stay_durations) == 0:
             chosen_platform_pages = self.platform_choices[-1].pages
             pages_w = [page.w for page in chosen_platform_pages]
             cur_page_choices = []
@@ -27,22 +27,34 @@ class User:
             self.page_choices.append(cur_page_choices)
 
     def decision_to_stay(self):
-        if stay_durations[-1] = 0 or len(stay_durations) == 0:
-            self.stay_decision = np.random.choice([False, True])
-            if stay_decision == True:
-                chosen_platform_pages = page_choices[-1]
-                total_utility = np.sum(np.array([page.w for page in chosen_platform_pages]))
-                stay_durations.append(round(total_utility))
+        if stay_durations[-1] == 0 or len(stay_durations) == 0:
+            if len(page_choices[-1]) > 0:
+                self.stay_decision = np.random.choice([False, True])
+                if stay_decision == True:
+                    self.platform_choices[-1].active_users_count += 1
+                    chosen_platform_pages = page_choices[-1]
+                    total_utility = np.sum(np.array([page.w for page in chosen_platform_pages]))
+                    duration = int(round(total_utility))
+                    stay_durations.append(duration)
+                    for page in chosen_platform_pages:
+                        page.time_spent += duration
+
+            else:
+                self.stay_durations[-1] = 0
         else:
-            stay_durations[-1] -= 1
+            self.stay_durations[-1] -= 1
+            if self.stay_durations[-1] == 0:
+                self.platform_choices[-1].active_users_count -= 1
 
     def add_friend(self, friend):
         self.append(friend)
 
     def choose_platform(self):
-        if stay_durations[-1] = 0 or len(stay_durations) == 0:
+        if stay_durations[-1] == 0 or len(stay_durations) == 0:
             current_platform_choice = np.random.choice(model.platforms)
             self.platform_choices.append(current_platform_choice)
+
+            current_platform_choice.visits += 1
 
     def step(self):
         self.choose_platform()

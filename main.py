@@ -25,7 +25,8 @@ class AdEconomyModel(Model):
 
         for j in range(param['N_PLATFORMS']):
             p = Platform(unique_id = j, model = self)
-            p.create_page()
+            for m in range(param['PAGES_PER_PLATFORM']):
+                p.create_page()
             self.platforms.append(p)
 
         for k in range(param['N_ADVERTISERS']):

@@ -1,4 +1,4 @@
-
+import numpy as np
 
 class Advertiser:
     """ Optimize gains from investing in platforms.
@@ -9,12 +9,13 @@ class Advertiser:
         self.model = model
         self.investment_size = self.model.param['N_PAGE_ADVERTISERS_CAN_AFFORD']
 
-    def choose_platform(self):
-        # Constrained by self.investment_size
-        # First at random
-        # Then a function of returns
-        # Some new ones at random (innovation)
-        pass
+    def choose_n_platforms(self):
+        current_platforms = model.platforms.copy()
+        platform_engagements = [platform.engagement for platform in current_platforms]
+        for platform_index in np.argsort(platform_engagements)[-8:]:
+            current_platforms[platform_index].no_of_advertisements += 1
+
+
 
     def invest_amount(self):
         pass
