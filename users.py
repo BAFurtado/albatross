@@ -13,14 +13,18 @@ class User(Agent):
         self.utility_lower_bound = np.random.uniform(-1, 1)
         self.platform_choices = list()
         self.page_choices = list()
-        self.stay_durations  = list()
+        self.stay_durations = list()
 
     def go_to_pages(self):
-        if stay_durations[-1] == 0 or len(stay_durations) == 0:
+        try:
+            ready_to_move = (self.stay_durations[-1] == 0)
+        except:
+            ready_to_move = True
+        if ready_to_move:
             chosen_platform_pages = self.platform_choices[-1].pages
             pages_w = [page.w for page in chosen_platform_pages]
             cur_page_choices = []
-            utility_from_pages = list(map(pref_func, pages_w))
+            utility_from_pages = [self.utility_func(w) for pages_w]
             for list_index, utility in enum(utility_from_page):
                 if utility >= self.utility_lower_bound:
                     chosen_platform_pages[list_index].visits += 1
@@ -28,7 +32,11 @@ class User(Agent):
             self.page_choices.append(cur_page_choices)
 
     def decision_to_stay(self):
-        if stay_durations[-1] == 0 or len(stay_durations) == 0:
+        try:
+            ready_to_move = (self.stay_durations[-1] == 0)
+        except:
+            ready_to_move = True
+        if ready_to_move:
             if len(page_choices[-1]) > 0:
                 self.stay_decision = np.random.choice([False, True])
                 if stay_decision == True:
@@ -51,8 +59,12 @@ class User(Agent):
         self.append(friend)
 
     def choose_platform(self):
-        if stay_durations[-1] == 0 or len(stay_durations) == 0:
-            current_platform_choice = np.random.choice(model.platforms)
+        try:
+            ready_to_move = (self.stay_durations[-1] == 0)
+        except:
+            ready_to_move = True
+        if ready_to_move:
+            current_platform_choice = np.random.choice(self.model.platforms)
             self.platform_choices.append(current_platform_choice)
 
             current_platform_choice.visits += 1

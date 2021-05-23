@@ -65,3 +65,4 @@ if __name__ == '__main__':
     prs = to_dict_from_module()
     # TODO include scenarios.
     m1 = AlbatrossModel(prs)
+    m1.step()
