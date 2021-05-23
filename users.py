@@ -33,7 +33,7 @@ class User:
                 if stay_decision == True:
                     self.platform_choices[-1].active_users_count += 1
                     chosen_platform_pages = page_choices[-1]
-                    total_utility = np.sum(np.array([page.w for page in chosen_platform_pages]))
+                    total_utility = np.sum(list(map(self.utility_func, [page.w for page in chosen_platform_pages])))
                     duration = int(round(total_utility))
                     stay_durations.append(duration)
                     for page in chosen_platform_pages:
