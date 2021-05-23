@@ -1,17 +1,17 @@
 import parameters as params
-
 import networkx as nx
 import numpy as np
 
 import analysis
 
-
 from users import User
 from platforms import Platform
 from advertisers import Advertiser
 
+from mesa import Model
+from schedule import RandomActivationByBreed
 
-class Model:
+class AdEconomyModel(Model):
     def __init__(self, param):
         self.seed = np.random.RandomState(param['SEED'])
         self.param = param
@@ -20,15 +20,15 @@ class Model:
         self.advertisers = list()
         # Create agents
 
-        for i in range(param['N_AGENTS']):
-            self.agents.append(User(self))
+        for i in range(param['N_USERS']):
+            self.agents.append(User(unique_id = i, model = self))
 
         for j in range(param['N_PLATFORMS']):
-            p = Platform(self)
+            p = Platform(unique_id = j, model = self)
             p.create_page()
             self.platforms.append(p)
 
-        for k in range(params['N_ADVERTISERS']):
+        for k in range(param['N_ADVERTISERS']):
             self.advertisers.append(Advertiser(self))
 
         # Random network
@@ -66,6 +66,11 @@ def to_dict_from_module():
 
 
 if __name__ == '__main__':
+    #Things to decide:
+    # 1. Which scheduler to use?
+    #       1. Is there an ordinality to the agent function calls?
+    #               1. How does t = 0 "REALLY" look like?
+
     prs = to_dict_from_module()
     # TODO include scenarios.
     m1 = Model(prs)
