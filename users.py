@@ -3,8 +3,6 @@ import numpy as np
 class User:
     """ Optimizes their experience. Gain.
     """
-    # TODO: Basic behaviour is with increasing engagement level:
-    #  1. view (visit) 2. like (signal to the platform) 3. propagate (forcibly include into network)
     def __init__(self, unique_id, model):
         self.unique_id = unique_id
         # self.friends = list()
