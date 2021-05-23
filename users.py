@@ -1,6 +1,7 @@
 import numpy as np
+from mesa import Agent
 
-class User:
+class User(Agent):
     """ Optimizes their experience. Gain.
     """
     def __init__(self, unique_id, model):
@@ -8,7 +9,7 @@ class User:
         # self.friends = list()
         # self.cur_entertainment = 0
         self.model = model
-        self.utility_func = np.random.choice(self.model.param['possible_preferences_functions'])
+        self.utility_func = np.random.choice([self.model.param['possible_preferences_functions']])
         self.utility_lower_bound = np.random.uniform(-1, 1)
         self.platform_choices = list()
         self.page_choices = list()
@@ -57,6 +58,7 @@ class User:
             current_platform_choice.visits += 1
 
     def step(self):
+        print("User step")
         self.choose_platform()
         self.go_to_pages()
         self.decision_to_stay()

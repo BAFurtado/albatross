@@ -41,5 +41,6 @@ class Platform:
         self.engagement = page_vists * page_times
 
     def step(self):
-        update_gains()
-        regulate_pages()
+        print("Platform step")
+        self.update_gains()
+        self.regulate_pages()

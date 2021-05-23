@@ -11,51 +11,41 @@ from advertisers import Advertiser
 from mesa import Model
 from schedule import RandomActivationByBreed
 
-class AdEconomyModel(Model):
+class AlbatrossModel(Model):
     def __init__(self, param):
         self.seed = np.random.RandomState(param['SEED'])
         self.param = param
-        self.agents = list()
+        self.users = list()
         self.platforms = list()
         self.advertisers = list()
-        # Create agents
+        self.schedule = RandomActivationByBreed(self)
 
         for i in range(param['N_USERS']):
-            self.agents.append(User(unique_id = i, model = self))
+            new_user = User(unique_id = i, model = self)
+            self.users.append(new_user)
+            self.schedule.add(new_user)
 
         for j in range(param['N_PLATFORMS']):
-            p = Platform(unique_id = j, model = self)
+            new_platform = Platform(unique_id = j, model = self)
             for m in range(param['PAGES_PER_PLATFORM']):
-                p.create_page()
-            self.platforms.append(p)
+                new_platform.create_page()
+            self.platforms.append(new_platform)
+            self.schedule.add(new_platform)
 
         for k in range(param['N_ADVERTISERS']):
-            self.advertisers.append(Advertiser(self))
+            new_advertiser = Advertiser(unique_id = k, model = self)
+            self.advertisers.append(new_advertiser)
+            self.schedule.add(new_advertiser)
 
         # Random network
-        for agent in self.agents:
+        for agent in self.users:
             if np.random.random() > .5:
                 pass
 
         # TODO. Make the network a typical small world network
 
     def step(self):
-        # AGENTS
-        # For each agent, agents may pass or act
-        # Decide on pages to visit
-        # Visit pages
-        # Random
-        # Depends on their network
-        # Have visited in the past
-        # Gets reward
-
-        # PLATFORMS
-        # Collect numbers pass on to advertisers
-
-        # ADVERTISERS
-        # Get results.
-        # Decide on maintenance or new pages
-        pass
+        self.schedule.step()
     # Outputs
     # Which pattern are you going to use to "validate".
     # TODO: find pattern to replicate
@@ -74,4 +64,4 @@ if __name__ == '__main__':
 
     prs = to_dict_from_module()
     # TODO include scenarios.
-    m1 = Model(prs)
+    m1 = AlbatrossModel(prs)
