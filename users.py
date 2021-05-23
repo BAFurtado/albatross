@@ -1,42 +1,74 @@
 import numpy as np
+from mesa import Agent
 
-
-class User:
+class User(Agent):
     """ Optimizes their experience. Gain.
     """
-    # TODO: Basic behaviour is with increasing engagement level:
-    #  1. view (visit) 2. like (signal to the platform) 3. propagate (forcibly include into netword)
-    def __init__(self, model):
-        self.friends = list()
-        self.history = list()
-        self.entertainment = 0
+    def __init__(self, unique_id, model):
+        self.unique_id = unique_id
+        # self.friends = list()
+        # self.cur_entertainment = 0
         self.model = model
-        self.intrinsic_value = self.model.param['possible_preferences_functions']
+        self.utility_func = np.random.choice(self.model.param['possible_preferences_functions']())
+        self.utility_lower_bound = np.random.uniform(-1, 1)
+        self.platform_choices = list()
+        self.page_choices = list()
+        self.stay_durations = list()
 
-    def go_to_page(self):
-        pass
-        # Choose the page
-        # 1. Choose randomly if you have 0 options
-        # 2. Check your history and choose from there probabilistic
-        # 2. Get push/incentive from network
-        # 3. It might use number of likes as a signal attractor
-        chosen_page = None
-        # Calculate the gain from vising the page.
-        # If you get more value you may stay longer
-        self.entertainment += self.intrinsic_value(chosen_page)
-        # Condition on self.entertainment you may like.
-        # If you like it, you signal it to the platform
-        chosen_page.likes += 1
-        # If you love it, you include it (forcibly) into your network
-        self.history.append(chosen_page)
+    def go_to_pages(self):
+        try:
+            ready_to_move = (self.stay_durations[-1] == 0)
+        except:
+            ready_to_move = True
+        if ready_to_move:
+            chosen_platform_pages = self.platform_choices[-1].pages
+            pages_w = [page.w for page in chosen_platform_pages]
+            cur_page_choices = []
+            utility_from_pages = list(map(self.utility_func, pages_w))
+            for list_index, utility in enumerate(utility_from_pages):
+                if utility >= self.utility_lower_bound:
+                    chosen_platform_pages[list_index].visits += 1
+                    cur_page_choices.append(chosen_platform_pages[list_index])
+            self.page_choices.append(cur_page_choices)
 
     def decision_to_stay(self):
-        # Level of threshold of adherence
-        pass
+        try:
+            ready_to_move = (self.stay_durations[-1] == 0)
+        except:
+            ready_to_move = True
+        if ready_to_move:
+            if len(self.page_choices[-1]) > 0:
+                self.stay_decision = np.random.choice([False, True])
+                if self.stay_decision == True:
+                    self.platform_choices[-1].active_users_count += 1
+                    chosen_platform_pages = self.page_choices[-1]
+                    total_utility = np.sum(list(map(self.utility_func, [page.w for page in chosen_platform_pages])))
+                    duration = int(round(total_utility))
+                    self.stay_durations.append(duration)
+                    for page in chosen_platform_pages:
+                        page.time_spent += duration
+            else:
+                self.stay_durations.append(0)
+        else:
+            self.stay_durations[-1] -= 1
+            if self.stay_durations[-1] == 0:
+                self.platform_choices[-1].active_users_count -= 1
 
     def add_friend(self, friend):
-        # Network is static
         self.append(friend)
 
+    def choose_platform(self):
+        try:
+            ready_to_move = (self.stay_durations[-1] == 0)
+        except:
+            ready_to_move = True
+        if ready_to_move:
+            current_platform_choice = np.random.choice(self.model.platforms)
+            self.platform_choices.append(current_platform_choice)
 
+            current_platform_choice.visits += 1
 
+    def step(self):
+        self.choose_platform()
+        self.go_to_pages()
+        self.decision_to_stay()

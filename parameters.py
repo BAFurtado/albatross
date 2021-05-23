@@ -1,11 +1,17 @@
 import numpy as np
 
+step_count = 100
+
 # GENERAL
-N_AGENTS = 10
-N_PLATFORMS = 2
+N_USERS = 100
+N_PLATFORMS = 20
+N_ADVERTISERS = 5
+PAGES_PER_PLATFORM = 10
 N_PAGE_ADVERTISERS_CAN_AFFORD = 10
 DISTRIBUTION_INTRINSIC_VALUE = 'uniform'
 # DISTRIBUTION_INTRINSIC_VALUE = 'normal'
+# PAGE_UTILITY_THRESHOLD = -0.1
+# PAGE_AGE_PENALTY =  0.1
 
 SEED = 0
 
@@ -15,14 +21,10 @@ PAGE_COST_DENOMINATOR = 10
 
 # TODO. Test different distributions
 
-
-def possible_preferences_functions(value):
+def possible_preferences_functions():
     # Some possible rules. We'll need more rules
-    a = value ** 2
-    b = 1 / value
-    c = -value
-    d = value
-    return a, b, c, d
-
-
-
+    a = lambda x: x ** 2
+    b = lambda x: -x
+    c = lambda x: x
+    # d = 1 / value
+    return a, b, c#, d
