@@ -10,6 +10,8 @@ from advertisers import Advertiser
 
 from mesa import Model
 from schedule import RandomActivationByBreed
+from mesa.datacollection import DataCollector
+import matplotlib.pyplot as plt
 
 class AlbatrossModel(Model):
     def __init__(self, param):
@@ -38,10 +40,9 @@ class AlbatrossModel(Model):
             self.schedule.add(new_advertiser)
 
         # Random network
-        for agent in self.users:
-            if np.random.random() > .5:
-                pass
-
+        # for agent in self.users:
+        #     if np.random.random() > .5:
+        #         pass
         # TODO. Make the network a typical small world network
 
     def step(self):
@@ -55,7 +56,6 @@ class AlbatrossModel(Model):
 def to_dict_from_module():
     return {k: getattr(params, k) for k in dir(params) if not k.startswith('_')}
 
-
 if __name__ == '__main__':
     #Things to decide:
     # 1. Which scheduler to use?
@@ -65,4 +65,15 @@ if __name__ == '__main__':
     prs = to_dict_from_module()
     # TODO include scenarios.
     m1 = AlbatrossModel(prs)
-    m1.step()
+    for step in range(prs['step_count']):
+        # print(f"Starting step {step}")
+        m1.step()
+    platform_ids = [platform.unique_id for platform in m1.platforms]
+    visits = [platform.visits for platform in m1.platforms]
+    no_of_advertisements = [platform.no_of_advertisements for platform in m1.platforms]
+    fig, ax = plt.subplots(1, 2)
+    ax[0].bar(platform_ids, visits)
+    ax[0].set_title('Visits')
+    ax[1].bar(platform_ids, no_of_advertisements)
+    ax[1].set_title('No of ads')
+    plt.savefig('./results/run1.jpeg')

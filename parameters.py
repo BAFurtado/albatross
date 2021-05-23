@@ -1,5 +1,7 @@
 import numpy as np
 
+step_count = 100
+
 # GENERAL
 N_USERS = 100
 N_PLATFORMS = 20
@@ -18,7 +20,6 @@ SEED = 0
 PAGE_COST_DENOMINATOR = 10
 
 # TODO. Test different distributions
-
 
 def possible_preferences_functions():
     # Some possible rules. We'll need more rules

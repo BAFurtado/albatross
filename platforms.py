@@ -36,11 +36,10 @@ class Platform:
         self.pages.append(Page(self.model, self.model.param['DISTRIBUTION_INTRINSIC_VALUE']))
 
     def update_gains(self):
-        page_vists = np.array([page.vists for page in self.pages])
+        page_vists = np.array([page.visits for page in self.pages])
         page_times = np.array([page.time_spent for page in self.pages])
-        self.engagement = page_vists * page_times
+        self.engagement = np.sum(page_vists * page_times)
 
     def step(self):
-        print("Platform step")
         self.update_gains()
         self.regulate_pages()

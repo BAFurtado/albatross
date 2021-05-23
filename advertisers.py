@@ -11,13 +11,15 @@ class Advertiser:
         self.investment_size = self.model.param['N_PAGE_ADVERTISERS_CAN_AFFORD']
 
     def choose_n_platforms(self):
-        current_platforms = model.platforms.copy()
+        current_platforms = self.model.platforms.copy()
         platform_engagements = [platform.engagement for platform in current_platforms]
-        for platform_index in np.argsort(platform_engagements)[-8:]:
+        top_platforms = np.argsort(platform_engagements)
+        for platform_index in top_platforms[-8:]:
             current_platforms[platform_index].no_of_advertisements += 1
-            del current_platforms[platform_index]
+            # del current_platforms[platform_index]
         number_of_innovations = 2
-        for platform in np.random.choice(current_platforms, number_of_innovations):
+        current_platforms = np.array(current_platforms)
+        for platform in np.random.choice(current_platforms[top_platforms[:-8]], number_of_innovations):
             platform.no_of_advertisements += 1
 
     def invest_amount(self):
@@ -27,5 +29,4 @@ class Advertiser:
         pass
 
     def step(self):
-        print("Ad step")
         self.choose_n_platforms()
